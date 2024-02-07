@@ -36,29 +36,18 @@
                             @method('PUT')
                         @endif
                         <div class="mb-3">
-                            <label for="title" class="form-label">URL</label>
+                            <label for="url" class="form-label">URL</label>
                             <input type="text" id="url"
                                 class="form-control @error('url')
                                         is-invalid
                                         @enderror"
                                 placeholder="URL" name="url"
                                 @if (isset($row->url)) value="{{ $row->url }}" @endif>
-                            @error('title')
+                            @error('url')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-3">
 
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input d-none" name="status" checked
-                                    value="0">
-                                <input type="checkbox" class="form-check-input" name="status" value="1"
-                                    @if (isset($row->status)) @if ($row->status === 1)
-                                    checked @endif
-                                    @endif>
-                                <label class="form-check-label" for="">Status</label>
-                            </div>
-                        </div>
                         <button class="btn btn-primary waves-effect waves-light">Submit</button>
                     </form>
                 </div>
@@ -75,8 +64,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>URL</th>
-                                    <th>Status</th>
+                                    <th>Long URL</th>
+                                    <th>Short URL</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -84,17 +73,13 @@
                                 @forelse ($data as $key => $row)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ Str::limit($row->title, 20, '....') }}</td>
-                                        <td>
-                                            @if ($row->status === 1)
-                                                <span class="badge bg-success rounded-pill">Active</span>
-                                            @else
-                                                <span class="badge bg-danger rounded-pill">in-active</span>
-                                            @endif
+                                        <td>{{ Str::limit($row->url, 30, '...') }}</td>
+                                        <td><a href="{{ route('admin.url.short', $row->code) }}" target="_blank">
+                                                {{ route('admin.url.short', $row->code) }}</a>
+
                                         </td>
+                                        <td>{{ $row->count }}</td>
                                         <td>
-                                            <a href="{{ route($info->form_edit, $row->id) }}" class="edit"><i
-                                                    class="material-symbols-outlined">edit</i></a>
                                             <span class="delete d-inline-block" style="cursor: pointer"><i
                                                     class="material-symbols-outlined text-danger">delete</i></span>
                                             <form action="{{ route($info->form_destroy, $row->id) }}" method="post">
